@@ -143,7 +143,7 @@ try:
             lastStates.pop(0)
             lastStates.append(state)
 
-            if env.step % 60 == 0:
+            if env.stepNum % 60 == 0:
                 print(f"Episode: {episode}, Current reward: {episodeReward}")
 
             if done:
