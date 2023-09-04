@@ -147,7 +147,7 @@ try:
 
             output.clear(True, "status_text")
             with output.use_tags("status_text"):
-                print(f"Episode: {episode}, Current reward: {episodeReward}", end="\r")
+                print(f"Episode: {episode}, Current reward: {episodeReward}")
 
             if done:
                 break
