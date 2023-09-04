@@ -143,6 +143,8 @@ try:
             lastStates.pop(0)
             lastStates.append(state)
 
+            print(f"Episode: {episode}, Current reward: {episodeReward}", end="\r")
+            
             if done:
                 break
 
