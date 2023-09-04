@@ -78,15 +78,15 @@ def preprocess(x):
 pygameThread = threading.Thread(target=pygameWindow)
 pygameThread.start()
 
-numStates = 3
+numStates = 4
 inputShape = (numStates, 224, 256, 1)
 numActions = 4
 batchSize = 64
 memorySize = 1000
-numEpisodes = 100
+numEpisodes = 200
 epsilonStart = 1.0
 epsilonEnd = 0.1
-epsilonDecaySteps = 100
+epsilonDecaySteps = 200
 gamma = 0.99
 targetUpdateFrequency = 20
 saveFrequency = 15

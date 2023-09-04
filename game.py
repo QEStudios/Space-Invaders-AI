@@ -157,7 +157,7 @@ class Game:
                 if Game.intersects((self.playerBullet["x"], self.playerBullet["y"]+4), (1,4), (enemy["TL"][0] + enemy["x"], enemy["TL"][1] + enemy["y"]), enemy["size"]):
                     self.playerBullet["exists"] = False
                     enemy["state"] = 0
-                    self.score += enemy["type"]*10
+                    self.score += enemy["type"]*10*(self.enemyCount/self.aliveEnemies)
                     self.aliveEnemies -= 1
                     if self.aliveEnemies % 5 == 0:
                         self.moveAmount += 1
