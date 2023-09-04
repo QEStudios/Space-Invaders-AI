@@ -13,7 +13,7 @@ import time
 from datetime import datetime
 from keract import get_activations, display_activations
 import cProfile
-from google.colab import output
+import IPython
 
 print("Modules initialised")
 
@@ -118,6 +118,8 @@ try:
         episodeReward = 0
         episodeExperience = deque(maxlen=memorySize)  # Collect experience during the episode
 
+        out = display(IPython.display.Pretty(f"Episode: {episode}, Current reward: {episodeReward}"), display_id=True)
+
         lastStates = []
         for i in range(numStates):
             lastStates.append(env.drawToArray())
@@ -144,10 +146,7 @@ try:
 
             lastStates.pop(0)
             lastStates.append(state)
-
-            output.clear(False, "status_text")
-            with output.use_tags("status_text"):
-                print(f"Episode: {episode}, Current reward: {episodeReward}")
+            out.update(IPython.display.Pretty(f"Episode: {episode}, Current reward: {episodeReward}"))
 
             if done:
                 break
@@ -181,7 +180,7 @@ try:
             
         replayMemory += episodeExperience
         episodeRewards.append(episodeReward)
-        print(f"Episode: {episode}, Total Reward: {episodeReward}, Epsilon: {epsilon}")
+        out.update(IPython.display.Pretty(f"Episode: {episode}, Total Reward: {episodeReward}, Epsilon: {epsilon}"))
 
     ##        keractInputs = np.expand_dims(preprocess(np.array(lastStates)), (0))
     ##        activations = get_activations(mainModel, keractInputs)
