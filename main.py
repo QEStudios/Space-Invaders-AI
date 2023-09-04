@@ -81,7 +81,7 @@ pygameThread.start()
 numStates = 3
 inputShape = (numStates, 224, 256, 1)
 numActions = 4
-batchSize = 256
+batchSize = 64
 memorySize = 1000
 numEpisodes = 100
 epsilonStart = 1.0
@@ -143,7 +143,8 @@ try:
             lastStates.pop(0)
             lastStates.append(state)
 
-            print(f"Episode: {episode}, Current reward: {episodeReward}", end="\r")
+            if env.step % 60 == 0:
+                print(f"Episode: {episode}, Current reward: {episodeReward}")
 
             if done:
                 break
