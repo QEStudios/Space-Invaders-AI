@@ -145,7 +145,7 @@ try:
             lastStates.pop(0)
             lastStates.append(state)
 
-            output.clear(True, "status_text")
+            output.clear(False, "status_text")
             with output.use_tags("status_text"):
                 print(f"Episode: {episode}, Current reward: {episodeReward}")
 
