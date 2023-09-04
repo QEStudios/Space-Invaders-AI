@@ -13,6 +13,7 @@ import time
 from datetime import datetime
 from keract import get_activations, display_activations
 import cProfile
+from google.colab import output
 
 print("Modules initialised")
 
@@ -144,7 +145,9 @@ try:
             lastStates.pop(0)
             lastStates.append(state)
 
-            print(f"Episode: {episode}, Current reward: {episodeReward}", end='\r')
+            output.clear(True, "status_text")
+            with output.use_tags("status_text"):
+                print(f"Episode: {episode}, Current reward: {episodeReward}", end="\r")
 
             if done:
                 break
