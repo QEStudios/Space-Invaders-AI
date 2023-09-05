@@ -175,8 +175,8 @@ for episode in range(numEpisodes):
 
     if episode % saveFrequency == 0:
         dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-        mainModel.save(f"space_invaders_dqn_main_{dtString}_checkpoint.keras")
-        targetModel.save(f"space_invaders_dqn_target_{dtString}_checkpoint.keras")
+        mainModel.save(f"space_invaders_dqn_main_{episode}_{dtString}_checkpoint.keras")
+        targetModel.save(f"space_invaders_dqn_target_{episode}_{dtString}_checkpoint.keras")
         
     replayMemory += episodeExperience
     episodeRewards.append(episodeReward)
