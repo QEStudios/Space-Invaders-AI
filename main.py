@@ -99,8 +99,8 @@ targetModel = buildDqnModel(inputShape, numActions)
 
 optimiser = Adam(learning_rate=0.001, epsilon=0.01)
 lookahead = Lookahead(optimiser, sync_period=5, slow_step=0.5)
-mainModel.compile(lookahead.optimizer, loss="mean_squared_error")
-targetModel.compile(lookahead.optimizer, loss="mean_squared_error")
+mainModel.compile(lookahead.optimizer, loss="mean_squared_error", metrics=['accuracy'])
+targetModel.compile(lookahead.optimizer, loss="mean_squared_error", metrics=['accuracy'])
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
