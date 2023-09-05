@@ -1,7 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras.layers import MaxPooling2D, Conv2D, ConvLSTM2D, Dense, BatchNormalization, Flatten, Dropout
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam, Lookahead
+from tensorflow.keras.optimizers import Adam
+from keras_lookahead import Lookahead
 import random
 import numpy as np
 from collections import deque
