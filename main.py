@@ -111,85 +111,85 @@ replayMemory = deque(maxlen=memorySize)
 print("Starting training")
 episodeRewards = []
 
-try:
-    for episode in range(numEpisodes):
-        env = Game()
-        state = env.drawToArray()
-        episodeReward = 0
-        episodeExperience = deque(maxlen=memorySize)  # Collect experience during the episode
+#try:
+for episode in range(numEpisodes):
+    env = Game()
+    state = env.drawToArray()
+    episodeReward = 0
+    episodeExperience = deque(maxlen=memorySize)  # Collect experience during the episode
 
-        lastStates = []
-        for i in range(numStates):
-            lastStates.append(env.drawToArray())
-        
-        while True:
-            epsilon = max(epsilonEnd, epsilonStart - episode / epsilonDecaySteps)
-            action = epsilonGreedyPolicy(np.expand_dims(preprocess(np.array(lastStates)), (0,-1)), epsilon)
+    lastStates = []
+    for i in range(numStates):
+        lastStates.append(env.drawToArray())
+    
+    while True:
+        epsilon = max(epsilonEnd, epsilonStart - episode / epsilonDecaySteps)
+        action = epsilonGreedyPolicy(np.expand_dims(preprocess(np.array(lastStates)), (0,-1)), epsilon)
 
-            reward = 0
-            drawQueue.clear()
-            for i in range(stepsPerPrediction-1):
-                s, r, _ = env.MLstep(action)
-                reward += r
-                drawQueue.append((env, episode+1))
-                lastStates.pop(0)
-                lastStates.append(s)
-            nextState, r, done = env.MLstep(action)
+        reward = 0
+        drawQueue.clear()
+        for i in range(stepsPerPrediction-1):
+            s, r, _ = env.MLstep(action)
             reward += r
             drawQueue.append((env, episode+1))
-
-            episodeReward += reward
-            episodeExperience.append((lastStates, action, reward, lastStates[1:] + [nextState], done))
-            state = nextState
-
             lastStates.pop(0)
-            lastStates.append(state)
+            lastStates.append(s)
+        nextState, r, done = env.MLstep(action)
+        reward += r
+        drawQueue.append((env, episode+1))
 
-            if env.stepNum % 60 == 0:
-                print(f"Episode: {episode}, Current reward: {episodeReward}")
+        episodeReward += reward
+        episodeExperience.append((lastStates, action, reward, lastStates[1:] + [nextState], done))
+        state = nextState
 
-            if done:
-                break
+        lastStates.pop(0)
+        lastStates.append(state)
 
-        # Update DQN model using collected experience after the episode ends
-        if len(replayMemory) >= batchSize:
-            minibatch = random.sample(replayMemory, batchSize)
-            statesBatch, actionBatch, rewardBatch, nextStatesBatch, doneBatch = zip(*minibatch)
+        if env.stepNum % 60 == 0:
+            print(f"Episode: {episode}, Current reward: {episodeReward}")
 
-            QValues = mainModel.predict(np.expand_dims(preprocess(np.array(statesBatch)), -1), verbose=0)
-            nextQValues = targetModel.predict(np.expand_dims(preprocess(np.array(nextStatesBatch)), -1), verbose=0)
+        if done:
+            break
 
-            for i in range(batchSize):
-                target = QValues[i].copy()
+    # Update DQN model using collected experience after the episode ends
+    if len(replayMemory) >= batchSize:
+        minibatch = random.sample(replayMemory, batchSize)
+        statesBatch, actionBatch, rewardBatch, nextStatesBatch, doneBatch = zip(*minibatch)
 
-                if doneBatch[i]:
-                    target[actionBatch[i]] = rewardBatch[i]
-                else:
-                    target[actionBatch[i]] = rewardBatch[i] + gamma * np.max(nextQValues[i])
+        QValues = mainModel.predict(np.expand_dims(preprocess(np.array(statesBatch)), -1), verbose=0)
+        nextQValues = targetModel.predict(np.expand_dims(preprocess(np.array(nextStatesBatch)), -1), verbose=0)
 
-                QValues[i] = target
+        for i in range(batchSize):
+            target = QValues[i].copy()
 
-            mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues, epochs=10)
-        if episode % targetUpdateFrequency == 0:
-            targetModel.set_weights(mainModel.get_weights())
+            if doneBatch[i]:
+                target[actionBatch[i]] = rewardBatch[i]
+            else:
+                target[actionBatch[i]] = rewardBatch[i] + gamma * np.max(nextQValues[i])
 
-        if episode % saveFrequency == 0:
-            dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-            mainModel.save(f"space_invaders_dqn_main_{dtString}_checkpoint.keras")
-            targetModel.save(f"space_invaders_dqn_target_{dtString}_checkpoint.keras")
-            
-        replayMemory += episodeExperience
-        episodeRewards.append(episodeReward)
-        print(f"Episode: {episode}, Total Reward: {episodeReward}, Epsilon: {epsilon}")
+            QValues[i] = target
 
-    ##        keractInputs = np.expand_dims(preprocess(np.array(lastStates)), (0))
-    ##        activations = get_activations(mainModel, keractInputs)
-    ##        display_activations(activations, cmap="gray", save=True, reshape_1d_layers=True, directory="layers/")
+        mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues, epochs=10)
+    if episode % targetUpdateFrequency == 0:
+        targetModel.set_weights(mainModel.get_weights())
+
+    if episode % saveFrequency == 0:
+        dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
+        mainModel.save(f"space_invaders_dqn_main_{dtString}_checkpoint.keras")
+        targetModel.save(f"space_invaders_dqn_target_{dtString}_checkpoint.keras")
         
-    dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-    mainModel.save(f"space_invaders_dqn_main_{dtString}.keras")
-    targetModel.save(f"space_invaders_dqn_target_{dtString}.keras")
-except:
-    dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-    mainModel.save(f"space_invaders_dqn_main_{dtString}_RECOVERED.keras")
-    targetModel.save(f"space_invaders_dqn_target_{dtString}_RECOVERED.keras")
+    replayMemory += episodeExperience
+    episodeRewards.append(episodeReward)
+    print(f"Episode: {episode}, Total Reward: {episodeReward}, Epsilon: {epsilon}")
+
+##        keractInputs = np.expand_dims(preprocess(np.array(lastStates)), (0))
+##        activations = get_activations(mainModel, keractInputs)
+##        display_activations(activations, cmap="gray", save=True, reshape_1d_layers=True, directory="layers/")
+    
+dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
+mainModel.save(f"space_invaders_dqn_main_{dtString}.keras")
+targetModel.save(f"space_invaders_dqn_target_{dtString}.keras")
+#except:
+#    dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
+#    mainModel.save(f"space_invaders_dqn_main_{dtString}_RECOVERED.keras")
+#    targetModel.save(f"space_invaders_dqn_target_{dtString}_RECOVERED.keras")
