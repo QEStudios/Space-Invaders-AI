@@ -22,16 +22,16 @@ def buildDqnModel(inputShape, numActions):
     # Convolutional layers
     model.add(ConvLSTM2D(16, (4, 4), strides=(2,2), activation='relu', input_shape=inputShape))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(16, (4, 4), strides=(2,2), activation='tanh'))
+    model.add(Conv2D(16, (4, 4), strides=(2,2), activation='relu'))
     model.add(BatchNormalization())
 
     # Reduce size for the fully connected layers to process
     model.add(Flatten())
 
     # Fully connected layers
-    model.add(Dense(512, activation='tanh'))
+    model.add(Dense(512, activation='relu'))
     model.add(BatchNormalization())
-    model.add(Dense(128, activation='tanh'))
+    model.add(Dense(128, activation='relu'))
     model.add(BatchNormalization())
     model.add(Dense(numActions, activation='linear'))
 
