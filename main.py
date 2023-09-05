@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow.keras.layers import MaxPooling2D, Conv2D, ConvLSTM2D, Dense, BatchNormalization, Flatten, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
-from keras_lookahead import Lookahead
 import random
 import numpy as np
 from collections import deque
@@ -98,9 +97,8 @@ mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
 optimiser = Adam(learning_rate=0.001, epsilon=0.01)
-lookahead = Lookahead(optimiser, sync_period=5, slow_step=0.5)
-mainModel.compile(lookahead.optimizer, loss="mean_squared_error", metrics=['accuracy'])
-targetModel.compile(lookahead.optimizer, loss="mean_squared_error", metrics=['accuracy'])
+mainModel.compile(optimiser, loss="mean_squared_error", metrics=['accuracy'])
+targetModel.compile(optimiser, loss="mean_squared_error", metrics=['accuracy'])
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
