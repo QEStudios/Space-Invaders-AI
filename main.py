@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.layers import MaxPooling2D, Conv2D, ConvLSTM2D, Dense, BatchNormalization, Flatten, Dropout
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam, Lookahead
 import random
 import numpy as np
 from collections import deque
@@ -96,9 +96,10 @@ print("Building models")
 mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
-optimiser = Adam(learning_rate=0.00025, epsilon=0.01)
-mainModel.compile(optimiser, loss="mean_squared_error")
-targetModel.compile(optimiser, loss="mean_squared_error")
+optimiser = Adam(learning_rate=0.001, epsilon=0.01)
+lookahead = Lookahead(optimiser, sync_period=5, slow_step=0.5, name = 'Lookahead')
+mainModel.compile(lookahead.optimizer, loss="mean_squared_error")
+targetModel.compile(lookahead.optimizer, loss="mean_squared_error")
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
@@ -167,7 +168,7 @@ try:
 
                 QValues[i] = target
 
-            mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues)
+            mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues, epochs=10)
         if episode % targetUpdateFrequency == 0:
             targetModel.set_weights(mainModel.get_weights())
 
