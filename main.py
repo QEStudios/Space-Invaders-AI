@@ -32,7 +32,7 @@ def buildDqnModel(inputShape, numActions):
     # Fully connected layers
     model.add(Dense(512, activation='relu'))
     model.add(BatchNormalization())
-    model.add(Dense(numActions, activation='linear'))
+    model.add(Dense(numActions, activation='softmax'))
 
     return model
 
@@ -97,8 +97,8 @@ mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
 optimiser = Adam(learning_rate=0.00025, epsilon=0.01)
-mainModel.compile(optimiser, loss="mean_squared_error", metrics=['accuracy'])
-targetModel.compile(optimiser, loss="mean_squared_error", metrics=['accuracy'])
+mainModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
+targetModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
