@@ -19,9 +19,11 @@ def buildDqnModel(inputShape, numActions):
     model = Sequential()
 
     # Convolutional layers
-    model.add(ConvLSTM2D(16, (4, 4), strides=(2,2), activation='relu', input_shape=inputShape))
+    model.add(ConvLSTM2D(12, (8, 8), strides=(2,2), activation='relu', input_shape=inputShape))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(16, (4, 4), strides=(2,2), activation='relu'))
+    model.add(Conv2D(8, (4, 4), strides=(1,1), activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Conv2D(4, (3, 3), strides=(1,1), activation='relu'))
     model.add(BatchNormalization())
 
     # Reduce size for the fully connected layers to process
@@ -29,8 +31,6 @@ def buildDqnModel(inputShape, numActions):
 
     # Fully connected layers
     model.add(Dense(512, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dense(128, activation='relu'))
     model.add(BatchNormalization())
     model.add(Dense(numActions, activation='linear'))
 
