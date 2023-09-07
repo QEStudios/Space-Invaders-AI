@@ -81,7 +81,7 @@ pygameThread.start()
 numStates = 4
 inputShape = (numStates, 224, 256, 1)
 numActions = 4
-batchSize = 64
+batchSize = 32
 memorySize = 2000
 numEpisodes = 200
 epsilonStart = 1.0
@@ -167,7 +167,7 @@ for episode in range(numEpisodes):
 
             QValues[i] = target
 
-        mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues, epochs=5)
+        mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues)
     if episode % targetUpdateFrequency == 0:
         targetModel.set_weights(mainModel.get_weights())
 
