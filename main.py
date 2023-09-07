@@ -73,7 +73,7 @@ def pygameWindow():
     pygame.quit()
 
 def preprocess(x):
-    return x
+    return x*2-1
 
 pygameThread = threading.Thread(target=pygameWindow)
 pygameThread.start()
