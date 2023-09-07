@@ -30,7 +30,7 @@ def buildDqnModel(inputShape, numActions):
     model.add(Flatten())
 
     # Fully connected layers
-    model.add(Dense(512, activation='relu'))
+    model.add(Dense(256, activation='relu'))
     model.add(BatchNormalization())
     model.add(Dense(numActions, activation='softmax'))
 
