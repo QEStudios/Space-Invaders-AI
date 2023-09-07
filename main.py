@@ -96,7 +96,7 @@ print("Building models")
 mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
-optimiser = Adam(learning_rate=0.001, epsilon=0.01)
+optimiser = Adam(learning_rate=0.00025, epsilon=0.01)
 mainModel.compile(optimiser, loss="mean_squared_error", metrics=['accuracy'])
 targetModel.compile(optimiser, loss="mean_squared_error", metrics=['accuracy'])
 
