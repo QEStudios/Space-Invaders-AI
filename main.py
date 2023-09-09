@@ -12,6 +12,7 @@ import threading
 import time
 from datetime import datetime
 from keract import get_activations, display_activations
+import cv2
 
 print("Modules initialised")
 
@@ -19,7 +20,7 @@ def buildDqnModel(inputShape, numActions):
     model = Sequential()
 
     # Convolutional layers
-    model.add(ConvLSTM2D(12, (8, 8), strides=(2,2), activation='relu', input_shape=inputShape))
+    model.add(ConvLSTM2D(12, (4, 4), strides=(1,1), activation='relu', input_shape=inputShape))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Conv2D(8, (4, 4), strides=(1,1), activation='relu'))
     model.add(BatchNormalization())
@@ -73,13 +74,14 @@ def pygameWindow():
     pygame.quit()
 
 def preprocess(x):
-    return x*2-1
+    arr = np.array(x)
+    return arr*2-1
 
 pygameThread = threading.Thread(target=pygameWindow)
 pygameThread.start()
 
 numStates = 4
-inputShape = (numStates, 224, 256, 1)
+inputShape = (numStates, 56, 64, 1)
 numActions = 4
 batchSize = 32
 memorySize = 2000
@@ -122,7 +124,7 @@ for episode in range(numEpisodes):
     
     while True:
         epsilon = max(epsilonEnd, epsilonStart - episode / epsilonDecaySteps)
-        action = epsilonGreedyPolicy(np.expand_dims(preprocess(np.array(lastStates)), (0,-1)), epsilon)
+        action = epsilonGreedyPolicy(np.expand_dims(preprocess(lastStates), (0,-1)), epsilon)
 
         reward = 0
         drawQueue.clear()
@@ -154,8 +156,8 @@ for episode in range(numEpisodes):
         minibatch = random.sample(replayMemory, batchSize)
         statesBatch, actionBatch, rewardBatch, nextStatesBatch, doneBatch = zip(*minibatch)
 
-        QValues = mainModel.predict(np.expand_dims(preprocess(np.array(statesBatch)), -1), verbose=0)
-        nextQValues = targetModel.predict(np.expand_dims(preprocess(np.array(nextStatesBatch)), -1), verbose=0)
+        QValues = mainModel.predict(np.expand_dims(preprocess(statesBatch), -1), verbose=0)
+        nextQValues = targetModel.predict(np.expand_dims(preprocess(nextStatesBatch), -1), verbose=0)
 
         for i in range(batchSize):
             target = QValues[i].copy()
@@ -167,7 +169,7 @@ for episode in range(numEpisodes):
 
             QValues[i] = target
 
-        mainModel.fit(np.expand_dims(preprocess(np.array(statesBatch)), -1), QValues)
+        mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues)
     if episode % targetUpdateFrequency == 0:
         targetModel.set_weights(mainModel.get_weights())
 

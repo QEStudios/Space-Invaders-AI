@@ -64,6 +64,7 @@ class Game:
         self.enemyBulletCooldown = 0
         self.inputs = {"left": False, "right": False, "fire": False}
         self.health = 1
+        self.lastKill = 0
 
 
         for y in reversed(range(self.enemiesY)):
@@ -159,6 +160,7 @@ class Game:
                     enemy["state"] = 0
                     self.score += enemy["type"]*10*(self.enemyCount/self.aliveEnemies)
                     self.aliveEnemies -= 1
+                    self.lastKill = self.stepNum
                     if self.aliveEnemies % 5 == 0:
                         self.moveAmount += 1
                     if self.aliveEnemies == 0:
@@ -232,6 +234,10 @@ class Game:
 
         if self.stepNum % 300 == 0:
             self.moveAmount += 1
+
+        if self.stepNum - self.lastKill > 180:
+            self.score -= 50
+            self.done = True
         
         self.stepNum += 1
 
@@ -302,5 +308,6 @@ class Game:
 
     def drawToArray(self):
         im = self.draw(BW=True, ML=True)
+        im = im.resize((64,56))
         screen = np.asarray(im)
         return screen
