@@ -100,8 +100,8 @@ mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
 optimiser = Adam(learning_rate=0.00025, epsilon=0.01)
-mainModel.compile(optimiser, loss="mean_squared_error")
-targetModel.compile(optimiser, loss="mean_squared_error")
+mainModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
+targetModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
