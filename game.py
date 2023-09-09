@@ -125,7 +125,7 @@ class Game:
             self.playerBullet["y"] = 192
             self.fireHeld = True
         else:
-            self.score -= abs(self.screenRes[0]/2 - self.playerX)/self.screenRes[0]/2 * 0.05
+            self.score -= abs(self.screenRes[0]/2 - self.playerX)/self.screenRes[0]/2 * 0.2
         if inputs["fire"] == False and self.fireHeld == True:
             self.fireHeld = False
         for subStep in range(self.moveAmount):
