@@ -245,7 +245,7 @@ class Game:
 
         self.score -= (self.stepNum - self.lastMove) / 360
 
-        if self.stepNum - self.lastKill > 180:
+        if self.stepNum - self.lastMove > 180:
             self.score -= 50
             self.done = True
         
