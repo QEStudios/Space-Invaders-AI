@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras.layers import MaxPooling2D, Conv2D, ConvLSTM2D, Dense, BatchNormalization, Flatten, Dropout
+from tensorflow.keras.layers import MaxPooling3D, Conv2D, ConvLSTM2D, Dense, BatchNormalization, Flatten, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import SGD
 import random
@@ -20,11 +20,11 @@ def buildDqnModel(inputShape, numActions):
     model = Sequential()
 
     # Convolutional layers
-    model.add(ConvLSTM2D(12, (4, 4), strides=(1,1), activation='relu', input_shape=inputShape))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(12, (4, 4), strides=(1,1), activation='relu', input_shape=inputShape))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2)))
     model.add(Conv2D(8, (4, 4), strides=(1,1), activation='relu'))
     model.add(BatchNormalization())
-    model.add(Conv2D(4, (3, 3), strides=(1,1), activation='relu'))
+    model.add(ConvLSTM2D(4, (3, 3), strides=(1,1), activation='relu'))
     model.add(BatchNormalization())
 
     # Reduce size for the fully connected layers to process
