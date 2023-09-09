@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.layers import MaxPooling2D, Conv2D, ConvLSTM2D, Dense, BatchNormalization, Flatten, Dropout
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import SGD
 import random
 import numpy as np
 from collections import deque
@@ -99,9 +99,9 @@ print("Building models")
 mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
-optimiser = Adam(learning_rate=0.00025, epsilon=0.01)
-mainModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
-targetModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
+optimiser = SGD(learning_rate=0.005, epsilon=0.01)
+mainModel.compile(optimiser, loss="categorical_crossentropy")
+targetModel.compile(optimiser, loss="categorical_crossentropy")
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
