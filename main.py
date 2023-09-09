@@ -99,7 +99,7 @@ print("Building models")
 mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
-optimiser = SGD(learning_rate=0.005, epsilon=0.01)
+optimiser = SGD(learning_rate=0.005)
 mainModel.compile(optimiser, loss="categorical_crossentropy")
 targetModel.compile(optimiser, loss="categorical_crossentropy")
 
