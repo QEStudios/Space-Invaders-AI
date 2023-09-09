@@ -169,7 +169,7 @@ for episode in range(numEpisodes):
 
             QValues[i] = target
 
-        mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues)
+        mainModel.fit(np.expand_dims(preprocess(statesBatch), -1), QValues, epochs=5)
     if episode % targetUpdateFrequency == 0:
         targetModel.set_weights(mainModel.get_weights())
 
