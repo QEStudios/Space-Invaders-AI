@@ -100,8 +100,8 @@ mainModel = buildDqnModel(inputShape, numActions)
 targetModel = buildDqnModel(inputShape, numActions)
 
 optimiser = SGD(learning_rate=0.005)
-mainModel.compile(optimiser, loss="categorical_crossentropy")
-targetModel.compile(optimiser, loss="categorical_crossentropy")
+mainModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
+targetModel.compile(optimiser, loss="categorical_crossentropy", metrics=['accuracy'])
 
 targetModel.set_weights(mainModel.get_weights())
 print("Models built")
