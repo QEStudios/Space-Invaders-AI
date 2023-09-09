@@ -123,7 +123,6 @@ class Game:
             self.playerBullet["exists"] = True
             self.playerBullet["x"] = self.playerX
             self.playerBullet["y"] = 192
-            self.fireHeld = True
         else:
             self.score -= abs(self.screenRes[0]/2 - self.playerX)/self.screenRes[0]/2 * 0.2
         if inputs["fire"] == False and self.fireHeld == True:
