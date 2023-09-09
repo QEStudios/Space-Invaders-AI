@@ -176,8 +176,8 @@ for episode in range(numEpisodes):
 
     if episode % saveFrequency == 0:
         dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-        mainModel.save(f"space_invaders_dqn_main_{episode}_{dtString}_checkpoint.keras")
-        targetModel.save(f"space_invaders_dqn_target_{episode}_{dtString}_checkpoint.keras")
+        mainModel.save(f"space_invaders_dqn_main_{episode}_{dtString}_checkpoint.h5")
+        targetModel.save(f"space_invaders_dqn_target_{episode}_{dtString}_checkpoint.h5")
         
     replayMemory += episodeExperience
     episodeRewards.append(episodeReward)
@@ -188,9 +188,9 @@ for episode in range(numEpisodes):
 ##        display_activations(activations, cmap="gray", save=True, reshape_1d_layers=True, directory="layers/")
     
 dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-mainModel.save(f"space_invaders_dqn_main_{dtString}.keras")
-targetModel.save(f"space_invaders_dqn_target_{dtString}.keras")
+mainModel.save(f"space_invaders_dqn_main_{dtString}.h5")
+targetModel.save(f"space_invaders_dqn_target_{dtString}.h5")
 #except:
 #    dtString = str(datetime.now()).replace(" ", "_").replace(":", "-")
-#    mainModel.save(f"space_invaders_dqn_main_{dtString}_RECOVERED.keras")
-#    targetModel.save(f"space_invaders_dqn_target_{dtString}_RECOVERED.keras")
+#    mainModel.save(f"space_invaders_dqn_main_{dtString}_RECOVERED.h5")
+#    targetModel.save(f"space_invaders_dqn_target_{dtString}_RECOVERED.h5")
