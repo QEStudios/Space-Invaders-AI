@@ -33,7 +33,8 @@ def buildDqnModel(inputShape, numActions):
     # Fully connected layers
     model.add(Dense(256, activation='relu'))
     model.add(BatchNormalization())
-    model.add(Dense(numActions, activation='softmax'))
+    model.add(Dropout(0.5))
+    model.add(Dense(numActions, activation='sigmoid'))
 
     return model
 
