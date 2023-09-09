@@ -235,7 +235,7 @@ class Game:
         if self.stepNum % 300 == 0:
             self.moveAmount += 1
         
-        self.score -= (self.stepNum - self.lastKill) / 180
+        self.score -= (self.stepNum - self.lastKill) / 360
 
         if self.stepNum - self.lastKill > 180:
             self.score -= 50
