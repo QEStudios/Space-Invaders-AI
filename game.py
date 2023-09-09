@@ -65,6 +65,7 @@ class Game:
         self.inputs = {"left": False, "right": False, "fire": False}
         self.health = 1
         self.lastKill = 0
+        self.lastMove = 0
 
 
         for y in reversed(range(self.enemiesY)):
@@ -117,8 +118,10 @@ class Game:
         self.inputs = inputs
         if inputs["left"] == True and self.playerX > 24:
             self.playerX -= self.playerMoveSpeed
+            self.lastMove = self.stepNum
         if inputs["right"] == True and self.playerX < self.screenRes[0]-24:
             self.playerX += self.playerMoveSpeed
+            self.lastMove = self.stepNum
         if inputs["fire"] == True and self.fireHeld == False and self.playerBullet["exists"] == False:
             self.playerBullet["exists"] = True
             self.playerBullet["x"] = self.playerX
@@ -235,6 +238,12 @@ class Game:
             self.moveAmount += 1
         
         self.score -= (self.stepNum - self.lastKill) / 360
+
+        if self.stepNum - self.lastKill > 180:
+            self.score -= 50
+            self.done = True
+
+        self.score -= (self.stepNum - self.lastMove) / 360
 
         if self.stepNum - self.lastKill > 180:
             self.score -= 50
